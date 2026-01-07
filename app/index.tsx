@@ -158,8 +158,6 @@ const PokemonCard = ({ pokemon, index }: { pokemon: Pokemon; index: number }) =>
       </Link>
     </Animated.View>
   );
-    </ScrollView>
-  );
 }
 
 const styles = StyleSheet.create({
