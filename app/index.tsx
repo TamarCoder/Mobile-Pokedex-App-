@@ -1,49 +1,10 @@
 "use client";
+import PokemonCard from "@/components/PokemonCard";
 import Search from "@/components/Search";
-import { Link } from "expo-router";
+import { Pokemon } from "@/types/pokemon";
 import React, { useEffect, useState } from "react";
-import {
-  Animated,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-
-interface Pokemon {
-  name: string;
-  image: string;
-  imageBack: string;
-  type: PokemonType[];
-}
-
-interface PokemonType {
-  type: {
-    name: string;
-    url: string;
-  };
-}
-
-const colorByType: Record<string, string> = {
-  grass: "#78C850",
-  fire: "#F08030",
-  water: "#6890F0",
-  bug: "#A8B820",
-  normal: "#A8A878",
-  poison: "#A040A0",
-  electric: "#F8D030",
-  ground: "#E0C068",
-  fairy: "#EE99AC",
-  fighting: "#C03028",
-  psychic: "#F85888",
-  rock: "#B8A038",
-  ghost: "#705898",
-  ice: "#98D8D8",
-  dragon: "#7038F8",
-  dark: "#705848",
-  steel: "#B8B8D0",
-};
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function Index() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -52,11 +13,13 @@ export default function Index() {
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   useEffect(() => {
     fetchPokemons();
   }, []);
 
-   console.log(pokemons);
+  console.log(pokemons);
+
   async function fetchPokemons() {
     try {
       const response = await fetch(
@@ -84,112 +47,41 @@ export default function Index() {
   }
 
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={{ gap: 16, padding: 16 }}
       showsVerticalScrollIndicator={false}
     >
-      <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <View  style={{display: "flex",  flexDirection: "row", alignItems: "center",}}>
+        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+         <TouchableOpacity style={styles.filterIcon}>
+          <MaterialCommunityIcons name="filter-variant" color="#fff" size={24} />
+        </TouchableOpacity>
+      </View>
 
-      {filteredPokemons.map((pokemon, index) => (
-        <PokemonCard
-          key={pokemon.name}
-          pokemon={pokemon}
-          index={index}
-        />
-      ))}
+      <View style={styles.listContainer}>
+        {filteredPokemons.map((pokemon, index) => (
+          <PokemonCard key={pokemon.name} pokemon={pokemon} index={index} />
+        ))}
+      </View>
     </ScrollView>
   );
 }
-
-const PokemonCard = ({ pokemon, index }: { pokemon: Pokemon; index: number }) => {
-  const fadeAnim = new Animated.Value(0);
-  const scaleAnim = new Animated.Value(0.8);
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        delay: index * 100,
-        tension: 50,
-        friction: 7,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  return (
-    <Animated.View
-      style={{
-        opacity: fadeAnim,
-        transform: [{ scale: scaleAnim }],
-      }}
-    >
-      <Link
-        href={{ pathname: `/details`, params: { name: pokemon.name } }}
-        style={[
-          styles.card,
-          {
-            backgroundColor: colorByType[pokemon.type[0].type.name] + "50",
-          }
-        ]}
-      >
-        <View>
-          <Text style={styles.name}>{pokemon.name}</Text>
-          <Text style={[styles.type, { color: colorByType[pokemon.type[0].type.name] }]}>
-            {pokemon.type[0].type.name}
-          </Text>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: pokemon.image }}
-              style={styles.pokemonImage}
-            />
-            <Image
-              source={{ uri: pokemon.imageBack }}
-              style={styles.pokemonImage}
-            />
-          </View>
-        </View>
-      </Link>
-    </Animated.View>
-  );
-}
-
 const styles = StyleSheet.create({
-  card: {
-    padding: 20,
-    borderRadius: 20,
-    gap: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    textTransform: "capitalize",
-  },
-  type: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-  imageContainer: {
-    flexDirection: "row-reverse",
+  listContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 16,
     justifyContent: "center",
-    gap: 10,
   },
-  pokemonImage: {
-    width: 150,
-    height: 150,
-  },
+
+  filterIcon:{
+    width: 50,
+    height: 50,
+    backgroundColor: "#5f5b65ff",
+    borderRadius: 12,
+    padding: 13,
+    marginLeft: 8,
+    
+  }
 });

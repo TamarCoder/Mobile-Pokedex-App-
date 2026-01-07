@@ -1,4 +1,8 @@
 "use client";
+import TabButton from "@/components/TabButton";
+import { STAT_COLORS, TABS, TabType } from "@/constants/pokemon";
+import { COLORS } from "@/constants/theme";
+import { PokemonDetail, PokemonEffects } from "@/types/pokemon";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -6,78 +10,19 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
-interface pokemonsDetail {
-  name: string;
-  image: string;
-  forms: string[];
-  height: number;
-  weight: number;
-  type: PokemonType[];
-  imageBack: string;
-  stat: any;
-  abilities: AbilitySlot[];
-}
-
-interface PokemonType {
-  type: {
-    name: string;
-    url: string;
-  };
-}
-interface AbilitySlot {
-  ability: {
-    name: string;
-    url: string;
-  };
-}
-interface PokemonEffects {
-  effect_entries: {
-    effect: string;
-    language: {
-      name: string;
-    };
-  }[];
-}
-
-const colorByType: Record<string, string> = {
-  grass: "#78C850",
-  fire: "#F08030",
-  water: "#6890F0",
-  bug: "#A8B820",
-  normal: "#A8A878",
-  poison: "#A040A0",
-  electric: "#F8D030",
-  ground: "#E0C068",
-  fairy: "#EE99AC",
-  fighting: "#C03028",
-  psychic: "#F85888",
-  rock: "#B8A038",
-  ghost: "#705898",
-  ice: "#98D8D8",
-  dragon: "#7038F8",
-  dark: "#705848",
-  steel: "#B8B8D0",
-};
+const colorByType = COLORS as Record<string, string>
 
 export default function Details() {
   const params = useLocalSearchParams();
-  const [pokemonsDetail, setPokemonsDetail] = useState<pokemonsDetail | null>(
+  const [pokemonsDetail, setPokemonsDetail] = useState<PokemonDetail | null>(
     null
   );
-
-  const activeTabs = ["Forms", "Details", "Types", "Stats"];
-  const [selectedTab, setSelectedTab] = useState(activeTabs[0]);
-
+  const [selectedTab, setSelectedTab] = useState<TabType>(TABS[0]);
   const [effects, setEffects] = useState<PokemonEffects | null>(null);
 
-  const isToggled = (tab: string) => {
-    setSelectedTab(tab);
-    // console.log("Selected Tab:", tab);
-  };
 
   useEffect(() => {
     fetchPokemonDetails(params.name as string);
@@ -152,66 +97,15 @@ export default function Details() {
             </View>
 
             <View style={styles.cardMenu}>
-              <TouchableOpacity 
-                onPress={() => isToggled("Forms")}
-                style={[
-                  styles.tabButton,
-                  selectedTab === "Forms" && {
-                    backgroundColor: colorByType[pokemonsDetail.type[0].type.name],
-                    ...styles.activeTab,
-                  }
-                ]}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.title, selectedTab === "Forms" && styles.activeTabText]}>
-                  Forms
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => isToggled("Details")}
-                style={[
-                  styles.tabButton,
-                  selectedTab === "Details" && {
-                    backgroundColor: colorByType[pokemonsDetail.type[0].type.name],
-                    ...styles.activeTab,
-                  }
-                ]}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.title, selectedTab === "Details" && styles.activeTabText]}>
-                  Details
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => isToggled("Types")}
-                style={[
-                  styles.tabButton,
-                  selectedTab === "Types" && {
-                    backgroundColor: colorByType[pokemonsDetail.type[0].type.name],
-                    ...styles.activeTab,
-                  }
-                ]}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.title, selectedTab === "Types" && styles.activeTabText]}>
-                  Types
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => isToggled("Stats")}
-                style={[
-                  styles.tabButton,
-                  selectedTab === "Stats" && {
-                    backgroundColor: colorByType[pokemonsDetail.type[0].type.name],
-                    ...styles.activeTab,
-                  }
-                ]}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.title, selectedTab === "Stats" && styles.activeTabText]}>
-                  Stats
-                </Text>
-              </TouchableOpacity>
+              {TABS.map((tab) => (
+                <TabButton
+                  key={tab}
+                  title={tab}
+                  isActive={selectedTab === tab}
+                  onPress={() => setSelectedTab(tab)}
+                  activeColor={colorByType[pokemonsDetail.type[0].type.name]}
+                />
+              ))}
             </View>
 
             {selectedTab === "Forms" && (
@@ -326,15 +220,7 @@ export default function Details() {
             {selectedTab === "Stats" && (
               <View style={styles.contentContainer}>
                 {pokemonsDetail.stat.map((s: any) => {
-                  const statColors: Record<string, string> = {
-                    hp: "#FF5959",
-                    attack: "#F5AC78",
-                    defense: "#FAE078",
-                    "special-attack": "#9DB7F5",
-                    "special-defense": "#A7DB8D",
-                    speed: "#FA92B2",
-                  };
-                  const statColor = statColors[s.stat.name] || colorByType[pokemonsDetail.type[0].type.name];
+                  const statColor = STAT_COLORS[s.stat.name] || colorByType[pokemonsDetail.type[0].type.name];
                   const statPercentage = (s.base_stat / 255) * 100;
 
                   return (
@@ -398,27 +284,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginVertical: 10,
     gap: 8,
-  },
-  tabButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: "transparent",
-  },
-  activeTab: {
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "grey",
-  },
-  activeTabText: {
-    color: "white",
-    fontWeight: "bold",
   },
   contentContainer: {
     gap: 15,

@@ -24,7 +24,7 @@ export default function RootLayout() {
 
           /// if i want to modal must be this styles
           // presentation: "formSheet",
-          // sheetAllowedDetents: [1],
+          // sheetAllowedDetents: [0.3, 0.7, 1],
           // sheetGrabberVisible: true,
            
         }}

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textInput: {
-    flex: 1,
+   width: 320,
     padding: 16,
     backgroundColor: "#c1c1c1b2",
     borderRadius: 12,
