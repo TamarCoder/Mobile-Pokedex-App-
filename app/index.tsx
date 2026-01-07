@@ -51,17 +51,15 @@ export default function Index() {
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  console.log(JSON.stringify(pokemons, null, 2));
-
   useEffect(() => {
     fetchPokemons();
   }, []);
 
+   console.log(pokemons);
   async function fetchPokemons() {
     try {
       const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon/?limit=50"
+        "https://pokeapi.co/api/v2/pokemon/?limit=30"
       );
       const data = await response.json();
 

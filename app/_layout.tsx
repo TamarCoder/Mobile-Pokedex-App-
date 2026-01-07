@@ -21,9 +21,11 @@ export default function RootLayout() {
         options={{
           title: "Details",
           headerBackButtonDisplayMode: "minimal",
-          presentation: "formSheet",
-          sheetAllowedDetents: [1],
-          sheetGrabberVisible: true,
+
+          /// if i want to modal must be this styles
+          // presentation: "formSheet",
+          // sheetAllowedDetents: [1],
+          // sheetGrabberVisible: true,
            
         }}
       />
