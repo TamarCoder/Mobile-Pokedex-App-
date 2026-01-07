@@ -3,6 +3,7 @@ import Search from "@/components/Search";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  Animated,
   Image,
   ScrollView,
   StyleSheet,
@@ -83,54 +84,114 @@ export default function Index() {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ gap: 16, padding: 16 }}>
+    <ScrollView 
+      contentContainerStyle={{ gap: 16, padding: 16 }}
+      showsVerticalScrollIndicator={false}
+    >
       <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-      {filteredPokemons.map((pokemon) => (
-        <Link
+      {filteredPokemons.map((pokemon, index) => (
+        <PokemonCard
           key={pokemon.name}
-          href={{ pathname: `/details`, params: { name: pokemon.name } }}
-          style={{
-            backgroundColor: colorByType[pokemon.type[0].type.name] + "50",
-            padding: 20,
-            borderRadius: 20,
-            gap: 8,
-          }}
-        >
-          <View>
-            <Text style={styles.name}>{pokemon.name}</Text>
-            <Text style={styles.type}>{pokemon.type[0].type.name}</Text>
-            <View
-              style={{
-                flexDirection: "row-reverse",
-              }}
-            >
-              <Image
-                source={{ uri: pokemon.image }}
-                style={{ width: 150, height: 150 }}
-              />
-              <Image
-                source={{ uri: pokemon.imageBack }}
-                style={{ width: 150, height: 150 }}
-              />
-            </View>
-          </View>
-        </Link>
+          pokemon={pokemon}
+          index={index}
+        />
       ))}
     </ScrollView>
   );
 }
 
+const PokemonCard = ({ pokemon, index }: { pokemon: Pokemon; index: number }) => {
+  const fadeAnim = new Animated.Value(0);
+  const scaleAnim = new Animated.Value(0.8);
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        delay: index * 100,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [{ scale: scaleAnim }],
+      }}
+    >
+      <Link
+        href={{ pathname: `/details`, params: { name: pokemon.name } }}
+        style={[
+          styles.card,
+          {
+            backgroundColor: colorByType[pokemon.type[0].type.name] + "50",
+          }
+        ]}
+      >
+        <View>
+          <Text style={styles.name}>{pokemon.name}</Text>
+          <Text style={[styles.type, { color: colorByType[pokemon.type[0].type.name] }]}>
+            {pokemon.type[0].type.name}
+          </Text>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: pokemon.image }}
+              style={styles.pokemonImage}
+            />
+            <Image
+              source={{ uri: pokemon.imageBack }}
+              style={styles.pokemonImage}
+            />
+          </View>
+        </View>
+      </Link>
+    </Animated.View>
+  );
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
+  card: {
+    padding: 20,
+    borderRadius: 20,
+    gap: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
   name: {
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
+    textTransform: "capitalize",
   },
   type: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "grey",
     textAlign: "center",
+    textTransform: "uppercase",
+  },
+  imageContainer: {
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+    gap: 10,
+  },
+  pokemonImage: {
+    width: 150,
+    height: 150,
   },
 });

@@ -21,12 +21,24 @@ Browse through Pokémon, search for your favorites, and view detailed informatio
 
 ## ✨ Features
 
+### 🏠 Home Screen
 - 📱 **Cross-platform** - Works on iOS, Android, and Web
 - 🔍 **Real-time Search** - Instantly search through Pokémon by name
 - 🎨 **Type-based Colors** - Each Pokémon card displays with colors based on its type
-- 📊 **Detailed Information** - View height, weight, types, and sprites for each Pokémon
-- 🎯 **Smooth Navigation** - Seamless navigation between list and detail views
+- ✨ **Smooth Animations** - Fade-in and scale animations for Pokemon cards with staggered delays
+- 🎯 **Interactive Cards** - Tap any card to view detailed information
 - 🌐 **PokeAPI Integration** - Fetches real-time data from the official Pokémon API
+
+### 📊 Details Screen
+- 🎭 **Interactive Tab Navigation** - Switch between Forms, Details, Types, and Stats
+- 🖼️ **Pokemon Forms** - View front and back sprites with styled borders
+- 💊 **Ability Effects** - Displays Pokemon ability descriptions from PokeAPI
+- 📏 **Detailed Stats** - Height and weight with emoji icons (📏 ⚖️)
+- 🎨 **Type Badges** - Beautiful colored badges for each Pokemon type
+- 📊 **Progress Bars** - Visual representation of stats (HP, Attack, Defense, Speed, etc.)
+- 🌈 **Custom Stat Colors** - Each stat has its own unique color
+- 🎯 **Smooth Navigation** - Stack-based navigation with native animations
+- ✨ **Enhanced UI** - Shadows, rounded corners, and type-based color schemes
 
 ## 🛠️ Tech Stack
 
@@ -96,20 +108,58 @@ poketex/
 
 ## 🎨 Features Breakdown
 
-### Home Screen
-- Displays a grid of Pokémon cards
-- Each card shows the Pokémon's name, type, and both front and back sprites
+### 🎬 Animations
+
+The app features smooth, delightful animations powered by React Native's Animated API:
+
+- **Staggered Card Animations**: Each Pokemon card fades in and scales up with a 100ms delay
+- **Fade In Effect**: Cards smoothly appear with opacity animation (0 → 1)
+- **Spring Scale**: Bouncy spring animation for card scaling (0.8 → 1.0)
+- **Tab Transitions**: Smooth content switching between Forms, Details, Types, and Stats
+- **Native Driver**: Hardware-accelerated animations for optimal performance
+
+### 🏠 Home Screen
+- Displays Pokemon cards with front and back sprites
+- Each card shows the Pokémon's name and primary type
 - Cards are color-coded based on the Pokémon's primary type
-- Real-time search functionality
+- Real-time search functionality with instant filtering
+- Animated card appearance on load
+- Shadow effects and rounded corners for modern UI
 
-### Details Screen
-- Shows detailed information about selected Pokémon
-- Displays name, type(s), height, and weight
-- Shows both front and back sprites
-- Presented as a modal sheet with grab handle
+### 📊 Details Screen
 
-### Search Component
-- Reusable search input with icon
+The details screen features an interactive tab-based layout:
+
+#### 🎭 Forms Tab
+- Front and back Pokemon sprites in bordered frames
+- Ability effect descriptions with styled cards
+- Left border accent in Pokemon type color
+
+#### ℹ️ Details Tab
+- Height in meters (📏)
+- Weight in kilograms (⚖️)
+- Clean card design with shadows
+
+#### 🎨 Types Tab
+- Colored badges for each Pokemon type
+- Shadow effects matching type colors
+- Uppercase type names
+
+#### 📊 Stats Tab
+- Visual progress bars for all stats
+- Custom colors per stat:
+  - ❤️ HP: Red (#FF5959)
+  - ⚔️ Attack: Orange (#F5AC78)
+  - 🛡️ Defense: Yellow (#FAE078)
+  - ✨ Sp. Attack: Blue (#9DB7F5)
+  - 💚 Sp. Defense: Green (#A7DB8D)
+  - ⚡ Speed: Pink (#FA92B2)
+- Percentage-based progress (max: 255)
+
+### 🔍 Search Component
+- Reusable search input with Feather icon
+- Placeholder text guidance
+- Instant filtering as you type
 <div align="center">
 
 The app uses distinct colors for each Pokémon type:
