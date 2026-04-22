@@ -3,8 +3,7 @@ import PokemonCard from "@/components/PokemonCard";
 import Search from "@/components/Search";
 import { Pokemon } from "@/types/pokemon";
 import React, { useEffect, useState } from "react";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 export default function Index() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -47,41 +46,36 @@ export default function Index() {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{ gap: 16, padding: 16 }}
+    <FlatList
+      data={filteredPokemons}
+      keyExtractor={(item) => item.name}
+      numColumns={2}
+      columnWrapperStyle={styles.columnWrapper}
+      contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
-    >
-      <View  style={{display: "flex",  flexDirection: "row", alignItems: "center",}}>
-        <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-         <TouchableOpacity style={styles.filterIcon}>
-          <MaterialCommunityIcons name="filter-variant" color="#fff" size={24} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.listContainer}>
-        {filteredPokemons.map((pokemon, index) => (
-          <PokemonCard key={pokemon.name} pokemon={pokemon} index={index} />
-        ))}
-      </View>
-    </ScrollView>
+      ListHeaderComponent={
+        <View style={styles.headerRow}>
+          <Search searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        </View>
+      }
+      renderItem={({ item, index }) => (
+        <PokemonCard pokemon={item} index={index} />
+      )}
+    />
   );
 }
 const styles = StyleSheet.create({
-  listContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 16,
-    justifyContent: "center",
+  contentContainer: {
+    padding: 16,
   },
-
-  filterIcon:{
-    width: 50,
-    height: 50,
-    backgroundColor: "#5f5b65ff",
-    borderRadius: 12,
-    padding: 13,
-    marginLeft: 8,
-    
-  }
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
 });

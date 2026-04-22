@@ -8,35 +8,34 @@ const colorByType = COLORS
 
 export default function PokemonCard({ pokemon, index }: PokemonCardProps) {
   return (
-    <View>
-      <Link
-        href={{ pathname: `/details`, params: { name: pokemon.name } }}
-        style={[
-          styles.card,
-          {
-            backgroundColor: colorByType[pokemon.type[0].type.name as keyof typeof colorByType] + "50",
-          }
-        ]}
-      >
-        <View>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: pokemon.image }}
-              style={styles.pokemonImage}
-            />
-          </View>
-          <Text style={styles.name}>{pokemon.name}</Text>
-          <Text style={[styles.type, { color: colorByType[pokemon.type[0].type.name as keyof typeof colorByType] }]}>
-            {pokemon.type[0].type.name}
-          </Text>
+    <Link
+      href={{ pathname: `/details`, params: { name: pokemon.name } }}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colorByType[pokemon.type[0].type.name as keyof typeof colorByType] + "50",
+        }
+      ]}
+    >
+      <View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: pokemon.image }}
+            style={styles.pokemonImage}
+          />
         </View>
-      </Link>
-    </View>
+        <Text style={styles.name}>{pokemon.name}</Text>
+        <Text style={[styles.type, { color: colorByType[pokemon.type[0].type.name as keyof typeof colorByType] }]}>
+          {pokemon.type[0].type.name}
+        </Text>
+      </View>
+    </Link>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
+    width: "48%",
     padding: 20,
     borderRadius: 20,
     gap: 8,
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-    width: 180,
     height: 200,
   },
   name: {
